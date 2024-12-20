@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Twoje zamówienie zostało złożone pomyślnie!</h1>
+    
+    <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+        <button class="styled-button" type="submit">Powrót do strony głównej</button>
+    </form>
+{% endblock %}

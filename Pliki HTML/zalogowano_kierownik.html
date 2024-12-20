@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>{{ komunikat }}</h1>
+    <p>ID Stacji: {{ id_stacji }}</p>
+
+    <h2>Funkcje kierownika:</h2>
+
+    <div class="form-container">
+        <form action="{% url 'dodaj_pracownika' %}" method="get">
+            <button class="styled-button" type="submit">Dodaj pracownika</button>
+        </form>
+
+        <form action="{% url 'zamowienie_paliwa' %}" method="get">
+            <button class="styled-button" type="submit">Zamów dostawę paliwa</button>
+        </form>
+
+        <form action="{% url 'aktualne_zamowienia' %}" method="get">
+            <button class="styled-button" type="submit">Aktualne zamówienia</button>
+        </form>
+
+        <form action="{% url 'historia_zamowien' %}" method="get">
+            <button class="styled-button" type="submit">Historia zamówień</button>
+        </form>
+
+        <form action="{% url 'kierowcy' %}" method="get">
+            <button class="styled-button" type="submit">Pokaż kierowców</button>
+        </form>
+
+        <form action="{% url 'lista_cystern' %}" method="get">
+            <button class="styled-button" type="submit">Zarządzaj cysternami</button>
+        </form>
+        <form action="{% url 'wyloguj' %}" method="post">
+            {% csrf_token %}
+            <button class="styled-button" type="submit">Wyloguj</button>
+        </form>
+    </div>
+
+    <h2>Zamówienia do zatwierdzenia:</h2>
+    {% if zamowienia %}
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr style="background-color: #f2f2f2; height: 40px;">
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">ID Zamówienia</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Rodzaj paliwa</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Ilość paliwa</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left; width: 100px;">Akcja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for zamowienie in zamowienia %}
+                    <tr style="height: 40px;">
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.id_zamowienia }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.rodzaj_paliwa }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.ilosc_paliwa }} L</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                            <form action="{% url 'zatwierdz_zamowienie' zamowienie.id_zamowienia %}" method="get">
+                                <button class="styled-button" type="submit">Zatwierdź</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Brak zamówień do zatwierdzenia.</p>
+    {% endif %}
+    
+{% endblock %}

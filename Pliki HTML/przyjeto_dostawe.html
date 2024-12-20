@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Przyjęto dostawę</h1>
+
+    <p><strong>ID Zamówienia:</strong> {{ zamowienie.id_zamowienia }}</p>
+    <p><strong>Rodzaj Paliwa:</strong> {{ zamowienie.rodzaj_paliwa }}</p>
+    <p><strong>Ilość Paliwa:</strong> {{ zamowienie.ilosc_paliwa }}</p>
+    <p><strong>Status:</strong> {{ zamowienie.status }}</p>
+
+    <p><strong>Kierowca:</strong> 
+        {% if zamowienie.kierowca %}
+            {{ zamowienie.kierowca.imie }} {{ zamowienie.kierowca.nazwisko }}
+        {% else %}
+            Brak kierowcy
+        {% endif %}
+    </p>
+
+    <p><strong>Cysterna:</strong> 
+        {% if zamowienie.cysterna %}
+            {{ zamowienie.cysterna.numer_rejestracyjny }}
+        {% else %}
+            Brak cysterny
+        {% endif %}
+    </p>
+
+    <p><strong>Data zamówienia:</strong> 
+        {% if zamowienie.data_zamowienia %}
+            {{ zamowienie.data_zamowienia|date:"d-m-Y" }}
+        {% else %}
+            Brak daty zamówienia
+        {% endif %}
+    </p>
+
+    <p><strong>Data realizacji:</strong> 
+        {% if zamowienie.data_realizacji %}
+            {{ zamowienie.data_realizacji|date:"d-m-Y H:i" }}
+        {% else %}
+            Brak daty realizacji
+        {% endif %}
+    </p>
+
+    <p><strong>Uwagi:</strong> {{ zamowienie.uwagi }}</p>
+
+    <form action="{% url 'szczegoly_zamowienia' zamowienie.id_zamowienia %}" method="get">
+        <button type="submit">Powróć do szczegółów zamówienia</button>
+    </form>
+
+    <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+        <button type="submit">Powrót do strony głównej</button>
+    </form>
+
+{% endblock %}

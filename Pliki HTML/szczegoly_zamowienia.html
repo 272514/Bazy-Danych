@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Szczegóły zamówienia</h1>
+
+    <p><strong>ID Zamówienia:</strong> {{ zamowienie.id_zamowienia }}</p>
+    <p><strong>Rodzaj paliwa:</strong> {{ zamowienie.rodzaj_paliwa }}</p>
+    <p><strong>Ilość paliwa:</strong> {{ zamowienie.ilosc_paliwa }} litrów</p>
+    <p><strong>Status zamówienia:</strong> {{ zamowienie.status }}</p>
+    
+    {% if kierowca %}
+        <p><strong>Kierowca:</strong> {{ kierowca.imie }} {{ kierowca.nazwisko }}</p>
+    {% else %}
+        <p><strong>Kierowca:</strong> Brak przypisanego kierowcy</p>
+    {% endif %}
+
+    {% if cysterna %}
+        <p><strong>Cysterna:</strong> {{ cysterna.numer_rejestracyjny }} ({{ cysterna.pojemnosc }}L)</p>
+    {% else %}
+        <p><strong>Cysterna:</strong> Brak przypisanej cysterny</p>
+    {% endif %}
+    <p><strong>Data zamówienia:</strong> {{ zamowienie.data_zamowienia|date:"d-m-Y H:i" }}</p>
+    <p><strong>Uwagi:</strong> {{ zamowienie.uwagi }}</p>
+    <div class="form-container">
+        <form action="{% url 'przyjmij_dostawe' zamowienie.id_zamowienia %}" method="get">
+            <button type="submit" class="styled-button">Przyjmij dostawę</button>
+        </form>
+        <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+            <button class="styled-button" type="submit">Powrót do strony głównej</button>
+        </form>
+    </div>
+
+{% endblock %}
