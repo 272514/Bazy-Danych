@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Historia zamówień</h1>
+
+    {% if zamowienia %}
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+                <tr style="background-color: #f2f2f2; height: 40px;">
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">ID Zamówienia</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Rodzaj paliwa</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Ilość paliwa</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Kierowca</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Cysterna</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Data zamówienia</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Data realizacji</th>
+                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Uwagi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for zamowienie in zamowienia %}
+                    <tr style="height: 40px;">
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.id_zamowienia }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.rodzaj_paliwa }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.ilosc_paliwa }} L</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                            {{ zamowienie.kierowca.imie }} {{ zamowienie.kierowca.nazwisko }}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                            {{ zamowienie.cysterna.numer_rejestracyjny }}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                            {{ zamowienie.data_zamowienia|date:"d-m-Y H:i" }}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">
+                            {% if zamowienie.data_realizacji %}
+                                {{ zamowienie.data_realizacji|date:"d-m-Y H:i" }}
+                            {% else %}
+                                Brak daty realizacji
+                            {% endif %}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ zamowienie.uwagi }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Brak zrealizowanych zamówień.</p>
+    {% endif %}
+
+    <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+        <button type="submit" class="styled-button">Powrót do strony głównej</button>
+    </form>
+{% endblock %}

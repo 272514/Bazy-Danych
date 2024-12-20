@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Przyjmij dostawę paliwa - Zamówienie #{{ zamowienie.id_zamowienia }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="przejechana_dlugosc">Przejechana długość (w km):</label>
+            {{ form.przejechana_dlugosc }}
+        </div>
+        <button type="submit" class="styled-button">Zatwierdź dostawę</button>
+    </form>
+
+    <form action="{% url 'aktualne_zamowienia' %}" method="get">
+        <button type="submit" class="styled-button">Powrót do aktualnych zamówień</button>
+    </form>
+{% endblock %}
