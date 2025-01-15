@@ -5,17 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BigPot Transport</title>
     {% load static %}
-    <!-- Link do zewnętrznego pliku CSS -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <!-- Pasek nawigacyjny -->
     <div class="navbar">
         <img src="{% static 'images/logo.png' %}" alt="BigPot Logo" class="navbar-logo">
         <span class="navbar-title">BigPot Transport</span>
     </div>
-
-    <!-- Główna zawartość strony -->
     <div class="content-container">
         {% block content %}
         {% endblock %}
