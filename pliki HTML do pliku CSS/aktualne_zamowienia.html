@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h1>Aktualne zamówienia</h1>
+
+    {% if zamowienia %}
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>ID Zamówienia</th>
+                    <th>Rodzaj paliwa</th>
+                    <th>Ilość paliwa</th>
+                    <th>Kierowca</th>
+                    <th>Cysterna</th>
+                    <th>Data zamówienia</th>
+                    <th>Pracownik</th>
+                    <th>Uwagi</th>
+                    <th class="action-column">Akcja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for zamowienie in zamowienia %}
+                    <tr>
+                        <td>{{ zamowienie.id_zamowienia }}</td>
+                        <td>{{ zamowienie.rodzaj_paliwa }}</td>
+                        <td>{{ zamowienie.ilosc_paliwa }} L</td>
+                        <td>
+                            {% if zamowienie.kierowca %}
+                                {{ zamowienie.kierowca.imie }} {{ zamowienie.kierowca.nazwisko }}
+                            {% else %}
+                                Brak kierowcy
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if zamowienie.cysterna %}
+                                {{ zamowienie.cysterna.numer_rejestracyjny }}
+                            {% else %}
+                                Brak cysterny
+                            {% endif %}
+                        </td>
+                        <td>{{ zamowienie.data_zamowienia|date:"d-m-Y H:i" }}</td>
+                        <td>
+                            {% if zamowienie.pracownik %}
+                                {{ zamowienie.pracownik.imie }} {{ zamowienie.pracownik.nazwisko }}
+                            {% else %}
+                                Nieznany pracownik
+                            {% endif %}
+                        </td>
+                        <td>{{ zamowienie.uwagi|default:"Brak uwag" }}</td>
+                        <td class="action-column">
+                            <form action="{% url 'szczegoly_zamowienia' zamowienie.id_zamowienia %}" method="get">
+                                <button class="styled-button" type="submit">Przyjmij dostawę</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-orders">Brak aktualnych zamówień.</p>
+    {% endif %}
+
+    <div class="button-container">
+        <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+            <button class="styled-button" type="submit">Powrót do strony głównej</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
