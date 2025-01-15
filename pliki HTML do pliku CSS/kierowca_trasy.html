@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Trasy kierowcy {{ kierowca.imie }} {{ kierowca.nazwisko }}</h1>
+
+    {% if trasy %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Trasy</th>
+                    <th>ID Zamówienia</th>
+                    <th>ID Stacji</th>
+                    <th>Numer rejestracyjny cysterny</th>
+                    <th>Czas rozpoczęcia</th>
+                    <th>Czas zakończenia</th>
+                    <th>Całkowity czas (minuty)</th>
+                    <th>Przejechana długość</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trasa in trasy %}
+                    <tr>
+                        <td>{{ trasa.id_czas_trasy }}</td>
+                        <td>{{ trasa.id_zamowienia }}</td>
+                        <td>{{ trasa.id_stacji }}</td>
+                        <td>{{ trasa.numer_rejestracyjny_cysterny }}</td>
+                        <td>{{ trasa.czas_rozpoczecia|date:"d-m-Y H:i" }}</td>
+                        <td>
+                            {% if trasa.czas_zakonczenia %}
+                                {{ trasa.czas_zakonczenia|date:"d-m-Y H:i" }}
+                            {% else %}
+                                Brak
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if trasa.calkowity_czas %}
+                                {{ trasa.calkowity_czas|floatformat:2 }} min
+                            {% else %}
+                                Brak
+                            {% endif %}
+                        </td>
+                        <td>{{ trasa.przejechana_dlugosc }} km</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="text-align: center;">Brak tras do wyświetlenia.</p>
+    {% endif %}
+
+    <div class="button-container">
+        <form action="{% url 'kierowcy' %}" method="get">
+            <button class="styled-button" type="submit">Powrót do listy kierowców</button>
+        </form>
+        <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+            <button class="styled-button" type="submit">Powrót do strony głównej</button>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Złóż zamówienie paliwa</h1>
+
+    <div class="content-wrapper">
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div>
+                <label for="rodzaj_paliwa">Rodzaj paliwa:</label>
+                {{ form.rodzaj_paliwa }}
+            </div>
+
+            <div>
+                <label for="ilosc_paliwa">Ilość paliwa:</label>
+                {{ form.ilosc_paliwa }}
+            </div>
+
+            <div>
+                <label for="uwagi">Uwagi:</label>
+                {{ form.uwagi }}
+            </div>
+
+            <div>
+                <button type="submit" class="styled-button">Złóż zamówienie</button>
+            </div>
+        </form>
+
+        <div class="button-container">
+            <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+                <button type="submit" class="styled-button">Powrót do strony głównej</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

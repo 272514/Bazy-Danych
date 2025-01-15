@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <h1>Lista cystern</h1>
+
+    {% if cysterny %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Numer rejestracyjny</th>
+                    <th>Pojemność</th>
+                    <th>Data przeglądu</th>
+                    <th class="action-column">Akcja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cysterna in cysterny %}
+                    <tr>
+                        <td>{{ cysterna.numer_rejestracyjny }}</td>
+                        <td>{{ cysterna.pojemnosc }} L</td>
+                        <td>{{ cysterna.data_przegladu|date:"d-m-Y" }}</td>
+                        <td class="action-column">
+                            <form action="{% url 'zmien_dane_cysterny' cysterna.id_cysterny %}" method="get">
+                                <button class="styled-button" type="submit">Edytuj</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="text-align: center;">Brak cystern do wyświetlenia.</p>
+    {% endif %}
+
+    <div class="button-container">
+        <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+            <button class="styled-button" type="submit">Powrót do strony głównej</button>
+        </form>
+    </div>
+{% endblock %}

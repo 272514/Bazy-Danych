@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Historia zamówień</h1>
+
+    <form method="get" action="">
+        <div class="filter-container">
+            <div>
+                <label for="pracownik">Filtruj według pracownika:</label>
+                <select id="pracownik" name="pracownik">
+                    <option value="">Wszyscy pracownicy</option>
+                    {% for pracownik in pracownicy %}
+                        <option value="{{ pracownik.id_pracownika }}" {% if pracownik.id_pracownika|stringformat:"s" == filtr_pracownik %}selected{% endif %}>
+                            {{ pracownik.imie }} {{ pracownik.nazwisko }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="date-filter">
+                <label for="data_od">Data od:</label>
+                <input type="date" id="data_od" name="data_od" value="{{ filtr_data_od }}">
+            </div>
+            <div class="date-filter">
+                <label for="data_do">Data do:</label>
+                <input type="date" id="data_do" name="data_do" value="{{ filtr_data_do }}">
+            </div>
+            <div class="filter-button">
+                <button type="submit" class="styled-button">Filtruj</button>
+            </div>
+        </div>
+    </form>
+
+    {% if zamowienia %}
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>ID Zamówienia</th>
+                    <th>Rodzaj paliwa</th>
+                    <th>Ilość paliwa</th>
+                    <th>Kierowca</th>
+                    <th>Cysterna</th>
+                    <th>Data zamówienia</th>
+                    <th>Data realizacji</th>
+                    <th>Uwagi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for zamowienie in zamowienia %}
+                    <tr>
+                        <td>{{ zamowienie.id_zamowienia }}</td>
+                        <td>{{ zamowienie.rodzaj_paliwa }}</td>
+                        <td>{{ zamowienie.ilosc_paliwa }} L</td>
+                        <td>
+                            {% if zamowienie.kierowca %}
+                                {{ zamowienie.kierowca.imie }} {{ zamowienie.kierowca.nazwisko }}
+                            {% else %}
+                                Brak kierowcy
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if zamowienie.cysterna %}
+                                {{ zamowienie.cysterna.numer_rejestracyjny }}
+                            {% else %}
+                                Brak cysterny
+                            {% endif %}
+                        </td>
+                        <td>{{ zamowienie.data_zamowienia|date:"d-m-Y H:i" }}</td>
+                        <td>
+                            {% if zamowienie.data_realizacji %}
+                                {{ zamowienie.data_realizacji|date:"d-m-Y H:i" }}
+                            {% else %}
+                                Brak daty realizacji
+                            {% endif %}
+                        </td>
+                        <td>{{ zamowienie.uwagi|default:"Brak uwag" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="text-align: center;">Brak zrealizowanych zamówień.</p>
+    {% endif %}
+
+    <div class="button-container">
+        <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+            <button type="submit" class="styled-button">Powrót do strony głównej</button>
+        </form>
+    </div>
+{% endblock %}

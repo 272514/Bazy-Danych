@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+    <h1>Edytuj dane cysterny: {{ cysterna.numer_rejestracyjny }}</h1>
+
+    <div class="login-container">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="styled-button">Zapisz zmiany</button>
+        </form>
+
+        <div class="button-container">
+            <form action="{% url 'lista_cystern' %}" method="get">
+                <button type="submit" class="styled-button">Powrót do listy cystern</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

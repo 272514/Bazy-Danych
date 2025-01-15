@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Dodaj nowego pracownika</h1>
+
+    <div class="content-wrapper">
+        <form method="POST">
+            {% csrf_token %}
+        
+            <div>
+                <label for="imie">Imię:</label>
+                <input type="text" id="imie" name="imie" required>
+            </div>
+
+            <div>
+                <label for="nazwisko">Nazwisko:</label>
+                <input type="text" id="nazwisko" name="nazwisko" required>
+            </div>
+
+            <div>
+                <label for="login">Login:</label>
+                <input type="text" id="login" name="login" required>
+            </div>
+
+            <div>
+                <label for="haslo">Hasło:</label>
+                <input type="password" id="haslo" name="haslo" required>
+            </div>
+
+            <div>
+                <label for="numer_kontaktowy">Numer kontaktowy:</label>
+                <input type="text" id="numer_kontaktowy" name="numer_kontaktowy" required>
+            </div>
+
+            <button type="submit" class="styled-button">Dodaj pracownika</button>
+        </form>
+
+        <div class="button-container">
+            <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+                <button type="submit" class="styled-button">Powrót do strony głównej</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

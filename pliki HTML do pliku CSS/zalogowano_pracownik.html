@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h1>{{ komunikat }}</h1>
+    <h2 class="station-info">ID Stacji: {{ id_stacji }}</h2>
+
+    <h1>Funkcje pracownika:</h1>
+
+    <div class="button-grid">
+        <div class="button-column">
+            <form action="{% url 'zamowienie_paliwa' %}" method="get">
+                <button class="styled-button" type="submit">Zamów dostawę paliwa</button>
+            </form>
+
+            <form action="{% url 'aktualne_zamowienia' %}" method="get">
+                <button class="styled-button" type="submit">Aktualne zamówienia</button>
+            </form>
+
+            <form action="{% url 'historia_zamowien' %}" method="get">
+                <button class="styled-button" type="submit">Historia zamówień</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="logout-container" style="margin-top: 30px;">
+        <form action="{% url 'wyloguj' %}" method="post">
+            {% csrf_token %}
+            <button class="styled-button" type="submit">Wyloguj</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Lista kierowców</h1>
+
+    {% if page_obj %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Imię i nazwisko</th>
+                    <th>Status</th>
+                    <th class="table-action">Trasy</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for kierowca in page_obj %}
+                    <tr>
+                        <td>{{ kierowca.imie }} {{ kierowca.nazwisko }}</td>
+                        <td>{{ kierowca.status }}</td>
+                        <td class="table-action">
+                            <form action="{% url 'kierowca_trasy' kierowca.id_kierowcy %}" method="get">
+                                <button class="styled-button" type="submit">Pokaż trasy</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; Pierwsza</a>
+                <a href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+            {% endif %}
+
+            <span class="current">
+                Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Następna</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">Ostatnia &raquo;</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p style="text-align: center;">Brak kierowców do wyświetlenia.</p>
+    {% endif %}
+
+    <div class="button-container">
+        <form action="{% url 'strona_po_zalogowaniu' %}" method="get">
+            <button class="styled-button" type="submit">Powrót do strony głównej</button>
+        </form>
+    </div>
+{% endblock %}

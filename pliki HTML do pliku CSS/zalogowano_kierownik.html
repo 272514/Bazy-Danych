@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-wrapper">
+    <h1>{{ komunikat }}</h1>
+    <h2 class="station-info">ID Stacji: {{ id_stacji }}</h2>
+
+    <div class="button-grid">
+        <div class="button-column">
+            <form action="{% url 'dodaj_pracownika' %}" method="get">
+                <button class="styled-button" type="submit">Dodaj pracownika</button>
+            </form>
+            
+            <form action="{% url 'aktualne_zamowienia' %}" method="get">
+                <button class="styled-button" type="submit">Aktualne zamówienia</button>
+            </form>
+            
+            <form action="{% url 'kierowcy' %}" method="get">
+                <button class="styled-button" type="submit">Pokaż kierowców</button>
+            </form>
+            
+        </div>
+
+        <div class="button-column">
+            
+            <form action="{% url 'zamowienie_paliwa' %}" method="get">
+                <button class="styled-button" type="submit">Zamów dostawę paliwa</button>
+            </form>
+            
+            <form action="{% url 'historia_zamowien' %}" method="get">
+                <button class="styled-button" type="submit">Historia zamówień</button>
+            </form>
+
+            <form action="{% url 'lista_cystern' %}" method="get">
+                <button class="styled-button" type="submit">Zarządzaj cysternami</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="logout-container" style="margin-top: 20px;">
+        <form action="{% url 'wyloguj' %}" method="post">
+            {% csrf_token %}
+            <button class="styled-button" type="submit">Wyloguj</button>
+        </form>
+    </div>
+</div>
+
+<div class="orders-section">
+    <h1>Zamówienia do zatwierdzenia:</h1>
+    {% if zamowienia %}
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>ID Zamówienia</th>
+                    <th>Rodzaj paliwa</th>
+                    <th>Ilość paliwa</th>
+                    <th>Akcja</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for zamowienie in zamowienia %}
+                    <tr>
+                        <td>{{ zamowienie.id_zamowienia }}</td>
+                        <td>{{ zamowienie.rodzaj_paliwa }}</td>
+                        <td>{{ zamowienie.ilosc_paliwa }} L</td>
+                        <td class="action-column">
+                            <form action="{% url 'zatwierdz_zamowienie' zamowienie.id_zamowienia %}" method="get">
+                                <button class="styled-button" type="submit">Zatwierdź</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h2 class="no-orders">Brak zamówień do zatwierdzenia.</h2>
+    {% endif %}
+</div>
+{% endblock %}
