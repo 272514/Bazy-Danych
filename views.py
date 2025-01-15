@@ -5,6 +5,7 @@ from .forms import PracownikForm, ZamowienieForm, CysternaForm
 from django.contrib.auth import logout
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 import random
 
 def login_view(request):
@@ -31,7 +32,6 @@ def login_view(request):
             return redirect('login')
 
     return render(request, 'login.html')
-
 
 def dodaj_pracownika_view(request):
     if request.method == 'POST':
@@ -229,13 +229,37 @@ def historia_zamowien_view(request):
 
     id_stacji = request.session.get('id_stacji')
 
+    filtr_pracownik = request.GET.get('pracownik', None)
+    filtr_data_od = request.GET.get('data_od', None)
+    filtr_data_do = request.GET.get('data_do', None)
+
+    pracownicy = Pracownik.objects.filter(id_stacji=id_stacji)
+
     zamowienia = Zamowienie.objects.filter(status='Zrealizowane', id_stacji=id_stacji)
 
-    for zamowienie in zamowienia:
-        zamowienie.kierowca = Kierowca.objects.get(id_kierowcy=zamowienie.id_kierowcy)
-        zamowienie.cysterna = Cysterna.objects.get(id_cysterny=zamowienie.id_cysterny)
+    if filtr_pracownik:
+        zamowienia = zamowienia.filter(id_pracownika=filtr_pracownik)
+    if filtr_data_od:
+        zamowienia = zamowienia.filter(data_realizacji__gte=filtr_data_od)
+    if filtr_data_do:
+        zamowienia = zamowienia.filter(data_realizacji__lte=filtr_data_do)
 
-    return render(request, 'historia_zamowien.html', {'zamowienia': zamowienia})
+    pracownicy_map = {p.id_pracownika: p for p in Pracownik.objects.filter(id_stacji=id_stacji)}
+    kierowcy_map = {k.id_kierowcy: k for k in Kierowca.objects.all()}
+    cysterny_map = {c.id_cysterny: c for c in Cysterna.objects.all()}
+
+    for zamowienie in zamowienia:
+        zamowienie.pracownik = pracownicy_map.get(zamowienie.id_pracownika)
+        zamowienie.kierowca = kierowcy_map.get(zamowienie.id_kierowcy)
+        zamowienie.cysterna = cysterny_map.get(zamowienie.id_cysterny)
+
+    return render(request, 'historia_zamowien.html', {
+        'zamowienia': zamowienia,
+        'filtr_pracownik': filtr_pracownik,
+        'filtr_data_od': filtr_data_od,
+        'filtr_data_do': filtr_data_do,
+        'pracownicy': pracownicy,
+    })
 
 
 def aktualne_zamowienia_view(request):
@@ -249,8 +273,23 @@ def aktualne_zamowienia_view(request):
     zamowienia = Zamowienie.objects.filter(status='W trakcie', id_stacji=id_stacji)
 
     for zamowienie in zamowienia:
-        zamowienie.kierowca = Kierowca.objects.get(id_kierowcy=zamowienie.id_kierowcy)
-        zamowienie.cysterna = Cysterna.objects.get(id_cysterny=zamowienie.id_cysterny)
+        zamowienie.kierowca = None
+        try:
+            zamowienie.kierowca = Kierowca.objects.get(id_kierowcy=zamowienie.id_kierowcy)
+        except Kierowca.DoesNotExist:
+            pass
+
+        zamowienie.cysterna = None
+        try:
+            zamowienie.cysterna = Cysterna.objects.get(id_cysterny=zamowienie.id_cysterny)
+        except Cysterna.DoesNotExist:
+            pass
+
+        zamowienie.pracownik = None
+        try:
+            zamowienie.pracownik = Pracownik.objects.get(id_pracownika=zamowienie.id_pracownika)
+        except Pracownik.DoesNotExist:
+            pass
 
     return render(request, 'aktualne_zamowienia.html', {'zamowienia': zamowienia})
 
